@@ -1,4 +1,4 @@
-import {BREAK_CHANGE, SESSION_CHANGE, CLEAR} from '../constants/action-types';
+import {BREAK_CHANGE, SESSION_CHANGE, CLEAR, COUNTDOWN} from '../constants/action-types';
 
 export function breakChange(payload) {
     return {
@@ -17,3 +17,9 @@ export function clearSession(payload) {
         type: CLEAR, payload
     }
 }
+
+export function countDown(payload) {
+    return {
+        type: COUNTDOWN, payload
+    }
+};
