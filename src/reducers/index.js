@@ -37,7 +37,7 @@ function rootReducer(state=initialState, action) {
         case COUNTDOWN:
             return {
                 ...state,
-                currenttime: state.currenttime > 0 ?state.currenttime-action.payload : state.currenttime
+                currenttime: state.currenttime >= 0 ?state.currenttime-action.payload : state.currenttime
             }
         case STOP_TIMER:
             return {

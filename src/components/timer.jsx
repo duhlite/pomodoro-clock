@@ -27,11 +27,16 @@ class ConnectedTimer extends Component {
         this.state = {
             play: false,
         }
+        this.handleChange = this.handleChange.bind(this)
     }
 
     handleReset = () => {
-        clearInterval(this.timer)
+        clearInterval(this.timer);
+        this.setState({play: false});
         const clear = 'clear';
+        const sound = document.getElementById('beep');
+        sound.pause();
+        sound.currentTime = 0;
         this.props.clearSession(clear);
     };
 
@@ -50,9 +55,15 @@ class ConnectedTimer extends Component {
        
     }
 
-    handleChange = (currenttime) => {
-        if(currenttime === 0) {
+    componentWillReceiveProps = () => {
+        this.handleChange();
+    }
+
+    handleChange = () => {
+        console.log(this.props.currenttime);
+        if(this.props.currenttime === 0) {
             clearInterval(this.timer);
+            this.playSound();
             this.props.breakTime('change');
             this.timer = setInterval(
                 () => {
@@ -62,9 +73,15 @@ class ConnectedTimer extends Component {
         }
     };
 
+    playSound = () => {
+        const sound = document.getElementById('beep');
+        sound.currentTime = 0;
+        sound.play();
+    }
+
     setTime() {
         let minutes = Math.floor(this.props.currenttime/60000);
-        let seconds = (this.props.currenttime - minutes) * 60;
+        let seconds = ((this.props.currenttime - (minutes*60000)) /1000).toFixed();
         seconds = seconds < 10 ? '0' + seconds : seconds;
         minutes = minutes < 10 ? '0' + minutes : minutes;
         return minutes + ':'+ seconds;
@@ -76,7 +93,7 @@ class ConnectedTimer extends Component {
                 <div id='timer-label'>
                     {this.props.timelabel} 
                 </div>
-                <div id='time-left'onChange={this.handleChange(this.props.currenttime)}>
+                <div id='time-left'>
                     {this.setTime()}
                 </div>
                 <button id='start_stop' onClick={this.handleClick}>
@@ -85,6 +102,13 @@ class ConnectedTimer extends Component {
                 <button id='reset' onClick={this.handleReset}>
                     Reset
                 </button>
+                <audio 
+                    id='beep'
+                    className='clip'
+                    src='https://goo.gl/65cBl1'
+                    type='audio/wav'
+                >
+                </audio>
             </div>
         )
     }
